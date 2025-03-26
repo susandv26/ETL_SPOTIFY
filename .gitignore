@@ -1,0 +1,39 @@
+# Archivos y carpetas de entorno virtual
+venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Configuración del entorno
+.env
+*.env
+
+# Archivos de log y caché
+*.log
+*.sqlite3
+
+# Configuración de IDEs y editores
+.vscode/
+.idea/
+*.iml
+
+# Dependencias
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de cobertura y pruebas
+.coverage
+htmlcov/
+*.cover
+.tox/
+nosetests.xml
+coverage.xml
+*.pytest_cache/
+
+# Compilación y distribuciones
+build/
+dist/
+*.egg-info/
+*.egg
