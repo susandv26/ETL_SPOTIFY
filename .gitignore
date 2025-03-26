@@ -29,7 +29,7 @@ htmlcov/
 *.cover
 .tox/
 nosetests.xml
-coverage.xml
+coverage.gitt l
 *.pytest_cache/
 
 # Compilación y distribuciones
@@ -37,6 +37,3 @@ build/
 dist/
 *.egg-info/
 *.egg
-
-#archivo test
-test.py
