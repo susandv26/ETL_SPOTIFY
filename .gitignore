@@ -37,3 +37,6 @@ build/
 dist/
 *.egg-info/
 *.egg
+
+#archivo test
+test.py
