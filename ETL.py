@@ -9,7 +9,7 @@ passwordOrigen = '123'
 
 # Cadena de conexión
 try:
-    print("Conectando a la base de datos...")
+    print("Conectando a la base de datos OLTP...")
     # Cadena de conexión
     conexionOrigen = pyodbc.connect(f'DRIVER={{SQL Server}};'
                                     f'SERVER={serverOrigen};'
@@ -18,22 +18,40 @@ try:
                                     f'PWD={passwordOrigen}')
     print("Conexión exitosa")
 
-    # Crear cursor y ejecutar consulta origen
-    cursor = conexionOrigen.cursor()
-    cursor.execute("SELECT * FROM dbo.Artistas")
-
-    # Obtener y mostrar los datos origen
-    filas = cursor.fetchall()
-    if filas:
-        for fila in filas:
-            print(fila)
-    else:
-        print("No se encontraron registros.")
 
     # Cerrar la conexión
     cursor.close()
     conexionOrigen.close()
 
 except Exception as e:
-    print("Error al conectar a SQL Server:")
+    print("Error al conectar a base de dato OLTP:")
+    print(e)
+
+
+# Configuración de la conexión origen
+serverDestino = 'localhost'  # Ejemplo: 'localhost' o '192.168.1.100'
+databaseDestino = 'DW_SPOTIFY1'
+usuarioDestino = 'sa'
+passwordDestino = '123'
+
+# Cadena de conexión
+try:
+    print("Conectando a la base de datos OLAP...")
+    # Cadena de conexión
+    conexionDestino = pyodbc.connect(f'DRIVER={{SQL Server}};'
+                                    f'SERVER={serverDestino};'
+                                    f'DATABASE={databaseDestino};'
+                                    f'UID={usuarioDestino};'
+                                    f'PWD={passwordDestino}')
+    print("Conexión exitosa a bases de datos OLAP")
+
+        # Crear cursor y ejecutar consulta origen
+    cursor = conexionDestino.cursor()
+
+    # Cerrar la conexión
+    cursor.close()
+    conexionDestino.close()
+
+except Exception as e:
+    print("Error al conectar a base de datos OLAP:")
     print(e)
