@@ -9,7 +9,7 @@ def load_data(df, tabla_destino):
         conexion = conexion_olap_sqlalchemy()
         if conexion:
             # Cargar datos en la tabla de destino
-            df.to_sql(tabla_destino, con=conexion, if_exists='replace', index=False, schema='dbo')
+            df.to_sql(tabla_destino, con=conexion, if_exists='append', index=False, schema='dbo')
             print(f"Datos cargados correctamente en la tabla {tabla_destino}")
         else:
             print("No se pudo conectar a OLAP")
