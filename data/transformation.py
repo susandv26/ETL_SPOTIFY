@@ -1,4 +1,5 @@
 # data/transformation.py
+import pandas as pd
 
 def convertir_columna_a_minuscula(df, columna):
     if columna in df.columns:
