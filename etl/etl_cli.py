@@ -1,6 +1,6 @@
 # etl/etl_cli.py
 
-from config.database_config import conexion_oltp, conexion_olap_sqlalchemy
+from config.database_config import conexion_oltp_sqlalchemy, conexion_olap_sqlalchemy
 from data.extraction import extraer_datos
 from data.transformation import convertir_a_minuscula, convertir_a_mayuscula, extraer_fecha  # Se extenderá
 from sqlalchemy import inspect
@@ -56,7 +56,7 @@ def evitar_duplicados(df_origen, df_destino):
 
 def ejecutar_etl(consulta_sql, tabla_destino):
     # Extraer
-    conexion_oltp_sql = conexion_oltp()
+    conexion_oltp_sql = conexion_oltp_sqlalchemy()
     df_origen = extraer_datos(conexion_oltp_sql, consulta_sql)
     if df_origen.empty:
         print("❌ No se extrajeron datos.")
@@ -86,7 +86,7 @@ def ejecutar_etl(consulta_sql, tabla_destino):
 
 def main():
     print("🚀 ETL SPOTIFY - Menú Principal")
-    engine_oltp = conexion_oltp()
+    engine_oltp = conexion_oltp_sqlalchemy()
     engine_olap = conexion_olap_sqlalchemy()
 
     while True:

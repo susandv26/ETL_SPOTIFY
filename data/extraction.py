@@ -1,6 +1,6 @@
 
 import pandas as pd
-from config.database_config import conexion_oltp
+from config.database_config import conexion_oltp_sqlalchemy
 
 # Función para ejecutar consulta y extraer datos desde OLTP
 def extraer_datos(conexion, consulta_sql):
@@ -15,7 +15,7 @@ def extraer_datos(conexion, consulta_sql):
 # Función de extracción utilizando las conexiones configuradas
 def extraer_datos_oltp(consulta_sql):
     # Establecer la conexión a la base de datos OLTP
-    conexion = conexion_oltp()
+    conexion = conexion_oltp_sqlalchemy()
     if conexion:
         # Extraer datos de OLTP usando la consulta
         return extraer_datos(conexion, consulta_sql)
