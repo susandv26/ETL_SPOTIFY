@@ -37,3 +37,6 @@ build/
 dist/
 *.egg-info/
 *.egg
+
+
+config/database_config.py

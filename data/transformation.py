@@ -1,14 +1,24 @@
-# Función para convertir valores de un campo a minúscula
-def convertir_a_minuscula(df):
-    return df.applymap(lambda x: x.lower() if isinstance(x, str) else x)
+# data/transformation.py
 
-# Función para convertir valores de un campo a mayúscula
-def convertir_a_mayuscula(df):
-    return df.applymap(lambda x: x.upper() if isinstance(x, str) else x)
+def convertir_columna_a_minuscula(df, columna):
+    if columna in df.columns:
+        df[columna] = df[columna].astype(str).str.lower()
+    return df
 
-# Función para extraer partes de una fecha/hora
-def extraer_fecha(df):
-    for column in df.columns:
-        if pd.to_datetime(df[column], errors='coerce').notnull().any():
-            df[column] = pd.to_datetime(df[column], errors='coerce').dt.date
+def convertir_columna_a_mayuscula(df, columna):
+    if columna in df.columns:
+        df[columna] = df[columna].astype(str).str.upper()
+    return df
+
+def extraer_parte_fecha(df, columna, parte):
+    if columna in df.columns:
+        df[columna] = pd.to_datetime(df[columna], errors='coerce')
+        if parte == 'mes':
+            df[columna] = df[columna].dt.month
+        elif parte == 'dia':
+            df[columna] = df[columna].dt.day
+        elif parte == 'anio':
+            df[columna] = df[columna].dt.year
+        elif parte == 'hora':
+            df[columna] = df[columna].dt.hour
     return df
