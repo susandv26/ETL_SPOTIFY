@@ -131,8 +131,6 @@ def ejecutar_etl(consulta_sql, tabla_destino):
         print("❌ No se realizó ninguna asignación. Proceso cancelado.")
         return
 
-
-
     # Reorganizar DataFrame: origen → destino
     try:
         df_a_insertar = df_transformado[list(asignaciones.values())]
