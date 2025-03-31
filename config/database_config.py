@@ -4,7 +4,7 @@ import urllib
 
 # Función para obtener la conexión a la base de datos OLTP (para extracción)
 def conexion_oltp_sqlalchemy():
-    server = 'localhost'
+    server = 'DESKTOP-O0RIHTI\SQLEXPRESS'
     database = 'BD_SPOTIFY'
     usuario = 'sa'
     password = '123'
@@ -31,7 +31,7 @@ def conexion_oltp_sqlalchemy():
 
 # Función para conectar a OLAP con SQLAlchemy (CORREGIDA)
 def conexion_olap_sqlalchemy():
-    server = 'localhost'
+    server = 'DESKTOP-O0RIHTI\SQLEXPRESS'
     database = 'DW_SPOTIFY'
     usuario = 'sa'
     password = '123'
