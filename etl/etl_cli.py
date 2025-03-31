@@ -42,17 +42,18 @@ def seleccionar_transformacion():
     print("1. Minúscula")
     print("2. Mayúscula")
     print("3. Extraer fecha")
-    print("4. Ninguna (continuar)")
+    print("4. Concatenar campos")
+    print("5. Ninguna (continuar)")
     while True:
         op = input("Seleccione una opción: ")
-        if op in ('1', '2', '3', '4'):
+        if op in ('1', '2', '3', '4', '5'):
             return int(op)
         print("Opción inválida.")
 
 def aplicar_transformacion(df):
     while True:
         op = seleccionar_transformacion()
-        if op == 4:
+        if op == 5:
             break
         columna = seleccionar_columna(df)
 
@@ -75,7 +76,9 @@ def aplicar_transformacion(df):
                 print("❌ Error al convertir la fecha:")
                 print(e)
                 continue
-
+        elif op == 4:
+            from data.transformation import concatenar_columnas
+            df = concatenar_columnas(df)
         mostrar_preview(df, f"Transformación aplicada a columna '{columna}'")
 
     return df
@@ -126,7 +129,8 @@ def evitar_duplicados(df_origen, df_destino):
 
 def asignar_columnas(df_origen, engine_olap, tabla_destino):
     inspector = inspect(engine_olap)
-    columnas_destino = [col['name'] for col in inspector.get_columns(tabla_destino)]
+    columnas_info = inspector.get_columns(tabla_destino)
+    columnas_destino = [col['name'] for col in columnas_info]
     columnas_origen = list(df_origen.columns)
 
     print("\nColumnas origen disponibles:")
@@ -135,7 +139,14 @@ def asignar_columnas(df_origen, engine_olap, tabla_destino):
 
     asignaciones = {}
 
-    for col_dest in columnas_destino:
+    for col in columnas_info:
+        col_dest = col['name']
+        es_autoincrement = col.get('autoincrement', False)
+
+        if es_autoincrement:
+            print(f"🚫 La columna '{col_dest}' es autoincrementable y será ignorada.")
+            continue
+
         print(f"\n🧭 Columna destino: {col_dest}")
         seleccion = input("Ingrese el número de la columna origen (o ENTER para omitir): ")
         if seleccion.strip() == "":
@@ -167,14 +178,13 @@ def ejecutar_etl(consulta_sql, tabla_destino):
     df_transformado = aplicar_transformacion(df_origen)
     mostrar_preview(df_transformado, "Datos transformados:")
 
-        # Conectar a OLAP
+    # Conectar a OLAP
     engine_olap = conexion_olap_sqlalchemy()
     if engine_olap is None:
         print("❌ No se pudo conectar a la base de datos OLAP.")
         return
 
-
-    ##tiempo
+    # Si es Dim_Tiempo, tratamos diferente
     if tabla_destino == "Dim_Tiempo":
         columna_fecha = seleccionar_columna(df_transformado)
         df_dim_tiempo = generar_dim_tiempo(df_transformado, columna_fecha)
@@ -187,16 +197,16 @@ def ejecutar_etl(consulta_sql, tabla_destino):
             df_existente = pd.read_sql("SELECT id_tiempo FROM Dim_Tiempo", engine_olap)
             df_a_insertar = df_dim_tiempo[~df_dim_tiempo["id_tiempo"].isin(df_existente["id_tiempo"])]
         except:
-            df_a_insertar = df_dim_tiempo  # Si falla la verificación, intentamos cargar todo
+            df_a_insertar = df_dim_tiempo
 
         if df_a_insertar.empty:
             print("✅ No hay nuevas fechas para insertar en Dim_Tiempo.")
         else:
             df_a_insertar.to_sql("Dim_Tiempo", engine_olap, if_exists='append', index=False)
             print(f"✅ {len(df_a_insertar)} nuevas fechas insertadas en Dim_Tiempo.")
-        return  # ¡Importante! Salir de la función aquí para no seguir con el flujo normal
+        return
 
-    # Asignar columnas manualmente
+    # Asignación de columnas
     asignaciones = asignar_columnas(df_transformado, engine_olap, tabla_destino)
     if not asignaciones:
         print("❌ No se realizó ninguna asignación. Proceso cancelado.")
@@ -211,14 +221,31 @@ def ejecutar_etl(consulta_sql, tabla_destino):
         print(e)
         return
 
-    # Evitar duplicados
+    # Agrupar para tabla de hechos HECHOS_REPRODUCCIONES
+    if tabla_destino.upper() == "HECHOS_REPRODUCCIONES":
+        dimensiones = {"id_usuario", "id_cancion", "id_tiempo"}
+        if dimensiones.issubset(df_a_insertar.columns):
+            print("📊 Agrupando datos para HECHOS_REPRODUCCIONES...")
+            df_a_insertar["cantidad_reproducciones"] = 1
+            df_a_insertar = (
+                df_a_insertar
+                .groupby(["id_usuario", "id_cancion", "id_tiempo"], as_index=False)
+                .agg({
+                    "duracion_reproduccion_segundos": "sum",
+                    "cantidad_reproducciones": "count"
+                })
+            )
+            mostrar_preview(df_a_insertar, "✅ Datos agregados para tabla de hechos")
+        else:
+            print("⚠️ Faltan columnas necesarias para agrupar HECHOS_REPRODUCCIONES.")
+            return
+
+    # Evitar duplicados (opcional para tabla de hechos)
     try:
         df_destino = pd.read_sql(f"SELECT * FROM {tabla_destino}", engine_olap)
-        clave = list(asignaciones.keys())[0]  # Tomamos primera columna destino como clave
-        if clave in df_destino.columns:
-            df_a_insertar = evitar_duplicados(df_a_insertar, df_destino[[clave]])
-        else:
-            print(f"⚠️ La columna clave '{clave}' no existe en la tabla destino. No se pudo verificar duplicados.")
+        col_clave = df_destino.columns[0]
+        if col_clave in df_a_insertar.columns:
+            df_a_insertar = evitar_duplicados(df_a_insertar, df_destino[[col_clave]])
     except Exception as e:
         print("⚠️ No se pudo verificar duplicados:")
         print(e)
