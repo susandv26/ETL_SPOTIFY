@@ -54,7 +54,7 @@ CREATE TABLE Dim_Lista_Reproduccion (
 -- Dimensi�n Plan
 CREATE TABLE Dim_Plan (
     id_plan INT NOT NULL PRIMARY KEY,
-    nombre NVARCHAR(100) NOT NULL,
+    nombre_plan NVARCHAR(100) NOT NULL,
     precio DECIMAL(8, 2) NOT NULL
 );
 
@@ -120,4 +120,8 @@ ADD CONSTRAINT FK_Dim_Lista_Reproduccion_Usuario
 FOREIGN KEY (id_usuario)
 REFERENCES Dim_Usuario (id_usuario);
 
-UPDATE Dim_Plan SET NOMBRE = nombre_plan;
+
+
+ALTER TABLE HECHOS_REPRODUCCIONES
+ADD CONSTRAINT UQ_usuario_cancion_tiempo
+UNIQUE (id_usuario, id_cancion, id_tiempo);

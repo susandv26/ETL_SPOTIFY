@@ -40,3 +40,4 @@ dist/
 
 
 config/database_config.py
+logs/
