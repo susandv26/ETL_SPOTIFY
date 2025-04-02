@@ -19,7 +19,7 @@ SELECT ID_ARTISTA, NOMBRE FROM ARTISTAS;
 SELECT ID_GRUPO, NOMBRE FROM GRUPOS;
 
 --LLENADO DIM_CANCION
-SELECT ID_CANCION, ID_ARTISTA, ID_GRUPO, ID_GRUPO, ID_GENERO, TITULO, DURACION_SEGUNDOS FROM CANCIONES;
+SELECT ID_CANCION, ID_ARTISTA, ID_GRUPO, ID_GENERO, TITULO, DURACION_SEGUNDOS FROM CANCIONES;
 
 --LLENADO DIM_TIEMPO
 
@@ -38,33 +38,13 @@ FROM REPRODUCCIONES A
 GROUP BY A.fecha_reproduccion
 
 --LLENADO HECHOS
-
-SELECT ID_REPRODUCCION, ID_USUARIO, ID_CANCION, FECHA_REPRODUCCION ID_TIEMPO, COUNT(ID_CANCION) TOTAL_REPRODUCCIONES, DURACION_REPRODUCCION_SEGUNDOS 
-FROM REPRODUCCIONES 
-GROUP BY ID_REPRODUCCION, ID_USUARIO, ID_CANCION, FECHA_REPRODUCCION, DURACION_REPRODUCCION_SEGUNDOS;
-
-SELECT 
-    u.id_usuario,
-    u.nombre_usuario,
-    COUNT(r.id_reproduccion) AS total_reproducciones
-FROM 
-    usuarios u
-JOIN 
-    reproducciones r ON u.id_usuario = r.id_usuario
-GROUP BY 
-    u.id_usuario, u.nombre_usuario
-ORDER BY 
-    total_reproducciones DESC;
-
-
-
 	SELECT 
     r.id_usuario,
     r.id_cancion,
     CAST(CONVERT(VARCHAR(8), r.fecha_reproduccion, 112) AS INT) AS id_fecha,
     COUNT(*) AS cantidad_reproducciones,
     SUM(r.duracion_reproduccion_segundos) AS total_duracion_segundos
-FROM reproducciones r
+FROM reproducciones r2
 WHERE r.fecha_reproduccion IS NOT NULL
 GROUP BY 
     r.id_usuario,

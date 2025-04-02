@@ -84,7 +84,6 @@ def aplicar_transformacion(df):
 
         elif op == 3:
             print("\n📅 Formato de la fecha (ejemplo: %d/%m/%Y, %Y-%m-%d, etc.)")
-            print("Consulta formatos válidos aquí: https://strftime.org")
             formato = input("Ingrese el formato de la fecha: ").strip()
             try:
                 df[columna] = pd.to_datetime(df[columna], format=formato, errors='coerce')
@@ -104,10 +103,10 @@ def aplicar_transformacion(df):
 
 def seleccionar_transformacion():
     print("\nOpciones de transformación:")
-    print("1. Minúscula")
-    print("2. Mayúscula")
+    print("1. Convertir el valor del campo a minúscula ")
+    print("2. Convertir el valor del campo a Mayuscula")
     print("3. Extraer fecha")
-    print("4. Concatenar campos")
+    print("4. Concatenar el valor del campo con otro valor ")
     print("5. Ninguna (continuar)")
     while True:
         op = input("Seleccione una opción (o :quit para salir): ").strip().lower()
@@ -137,7 +136,6 @@ def aplicar_transformacion(df):
 
         elif op == 3:
             print("\n📅 Formato de la fecha (ejemplo: %d/%m/%Y, %Y-%m-%d, etc.)")
-            print("Consulta formatos válidos aquí: https://strftime.org")
             formato = input("Ingrese el formato de la fecha: ").strip()
             try:
                 df[columna] = pd.to_datetime(df[columna], format=formato, errors='coerce')

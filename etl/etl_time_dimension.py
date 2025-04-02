@@ -6,7 +6,6 @@ def generar_dim_tiempo(df, columna_fecha):
         return pd.DataFrame()
 
     print("\n📅 Formato de la fecha (ejemplo: %d/%m/%Y, %Y-%m-%d, etc.)")
-    print("Consulta formatos válidos aquí: https://strftime.org")
     formato = input("Ingrese el formato de la fecha: ").strip()
 
     try:
