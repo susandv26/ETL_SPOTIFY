@@ -877,7 +877,6 @@ INSERT INTO reproducciones VALUES (298, 23, 29, '2023-10-07', 155);
 INSERT INTO reproducciones VALUES (299, 23, 29, '2023-10-07', 147);
 INSERT INTO reproducciones VALUES (300, 23, 29, '2023-10-07', 149);
 
---DELETE FROM REPRODUCCIONES
 -------------------------------------
 
 INSERT INTO pagos (id_pago, id_usuario, id_plan, fecha_pago) VALUES (1, 18, 5, '2023-08-06');
