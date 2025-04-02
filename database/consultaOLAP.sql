@@ -51,16 +51,16 @@ GROUP BY
     r.id_cancion,
     CAST(CONVERT(VARCHAR(8), r.fecha_reproduccion, 112) AS INT);
 
+--LLENADO DE TIEMPO PARA NUESTRO ETL
+
+SELECT Id_tiempo FROM reproducciones;
+
+--LLENADO DE HECHOS PARA NUESTRO ETL
 
 SELECT 
     r.id_usuario,
     r.id_cancion,
-    CAST(CONVERT(VARCHAR(8), r.fecha_reproduccion, 112) AS INT) AS id_fecha,
-    COUNT(*) AS cantidad_reproducciones,
-    SUM(r.duracion_reproduccion_segundos) AS total_duracion_segundos
+    r.fecha_reproduccion AS id_tiempo,
+    r.duracion_reproduccion_segundos
 FROM reproducciones r
 WHERE r.fecha_reproduccion IS NOT NULL
-GROUP BY 
-    r.id_usuario,
-    r.id_cancion,
-    CAST(CONVERT(VARCHAR(8), r.fecha_reproduccion, 112) AS INT);
