@@ -1,4 +1,3 @@
-# data/transformation.py
 import pandas as pd
 
 def convertir_columna_a_minuscula(df, columna):
@@ -41,12 +40,10 @@ def concatenar_columnas(df):
         print("⚠️ Debe seleccionar al menos dos columnas.")
         return df
 
-    # Preguntar por delimitador
     delimitador = input("Ingrese el delimitador entre campos (ENTER para usar espacio): ")
     if delimitador.strip() == "":
         delimitador = " "
 
-    # Nombre para el nuevo campo
     nuevo_nombre = input("Nombre para la nueva columna concatenada (ENTER para usar por defecto): ")
     if not nuevo_nombre.strip():
         nuevo_nombre = "_".join(columnas) + "_concat"
@@ -54,7 +51,6 @@ def concatenar_columnas(df):
     # Concatenar columnas con delimitador
     df[nuevo_nombre] = df[columnas].astype(str).agg(delimitador.join, axis=1)
 
-    # Opción para eliminar columnas originales
     eliminar = input("¿Desea eliminar las columnas originales? (si/no): ").strip().lower()
     if eliminar == 'si':
         df.drop(columns=columnas, inplace=True)

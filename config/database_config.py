@@ -2,7 +2,7 @@ import pyodbc
 from sqlalchemy import create_engine
 import urllib
 
-# Función para obtener la conexión a la base de datos OLTP (para extracción)
+# Función para obtener la conexión a la base de datos OLTP
 def conexion_oltp_sqlalchemy():
     server = 'localhost'
     database = 'BD_SPOTIFY'
@@ -29,7 +29,7 @@ def conexion_oltp_sqlalchemy():
         print(e)
         return None
 
-# Función para conectar a OLAP con SQLAlchemy (CORREGIDA)
+# Función para conectar a OLAP
 def conexion_olap_sqlalchemy():
     server = 'localhost'
     database = 'DW_SPOTIFY'
